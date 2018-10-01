@@ -26,7 +26,7 @@ end
 
 post '/event_catch' do
   params = JSON.parse request.body.read
-  talk({"text": params["name"]})
+  talk({"text": params["token"]})
   json params
 end
 
