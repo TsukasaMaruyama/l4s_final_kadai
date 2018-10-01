@@ -26,7 +26,8 @@ end
 
 post '/event_catch' do
   params = JSON.parse request.body.read
-  talk(params)
+  talk({"text": params["mokmok"]})
+  json params
 end
 
 get '/mokmoks/create' do
