@@ -31,39 +31,26 @@ end
 
 get '/mokmoks/create' do
   content = {
-    "text": "Would you like to play a game?",
+    "text": "もくもく会に参加しますか?",
     "attachments": [
       {
-        "text": "Choose a game to play",
         "fallback": "You are unable to choose a game",
         "callback_id": "participate_mokmok",
         "color": "#3AA3E3",
         "attachment_type": "default",
         "actions": [
           {
-            "name": "game",
-            "text": "Chess",
+            "name": "mokmok",
+            "text": "参加する",
             "type": "button",
-            "value": "chess"
+            "value": "true"
           },
           {
-            "name": "game",
-            "text": "Falken's Maze",
+            "name": "mokmok",
+            "text": "参加しない",
             "type": "button",
-            "value": "maze"
-          },
-          {
-            "name": "game",
-            "text": "Thermonuclear War",
-            "style": "danger",
-            "type": "button",
-            "value": "war",
-            "confirm": {
-              "title": "Are you sure?",
-              "text": "Wouldn't you prefer a good game of chess?",
-              "ok_text": "Yes",
-              "dismiss_text": "No"
-            }
+            "value": "false"
+          }
           }
         ]
       }
