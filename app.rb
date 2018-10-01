@@ -25,7 +25,8 @@ def talk(content)
 end
 
 post '/event_catch' do
-  talk({text: "イベントをキャッチしました"+(JSON.parse request.body.read)})
+  params = JSON.parse request.body.read
+  talk({text: "イベントをキャッチしました"+params})
 end
 
 get '/mokmoks/create' do
