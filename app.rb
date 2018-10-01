@@ -50,8 +50,8 @@ get '/mokmoks/create' do
             "text": "参加しない",
             "type": "button",
             "value": "false"
-          }
-          }
+          },
+
         ]
       }
     ]
