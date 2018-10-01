@@ -6,6 +6,9 @@ require 'sinatra/reloader' if development?
 require 'net/http'
 require 'uri'
 
+helper do
+  params = JSON.parse request.body.read
+end
 
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
@@ -26,7 +29,7 @@ def talk(content)
 end
 
 post '/event_catch' do
-  talk({text: "イベントをキャッチしました"+params[:mokmok]})
+  talk({text: "イベントをキャッチしました"+JSON.parse request.body.read})
 end
 
 get '/mokmoks/create' do
