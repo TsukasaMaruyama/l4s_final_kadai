@@ -26,7 +26,7 @@ def talk(content)
 end
 
 post '/event_catch' do
-  talk({'text': "イベントをキャッチしました"})
+  talk({text: "イベントをキャッチしました"+params[:mokmok]})
 end
 
 get '/mokmoks/create' do
@@ -50,8 +50,7 @@ get '/mokmoks/create' do
             "text": "参加しない",
             "type": "button",
             "value": "false"
-          },
-
+          }
         ]
       }
     ]
