@@ -5,7 +5,7 @@ require 'sinatra/reloader' if development?
 
 
 post '/mokmoks/create' do
-  challenge = params[:challenge]
+  challenge = params["challenge"]
   res = {challenge:challenge}
   json res
 end
