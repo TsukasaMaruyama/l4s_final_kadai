@@ -25,7 +25,7 @@ def talk(content)
   https.request(req)
 end
 
-post 'event_catch' do
+post '/event_catch' do
   talk({'text': "イベントをキャッチしました"})
 end
 
