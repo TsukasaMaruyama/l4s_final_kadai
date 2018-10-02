@@ -25,12 +25,10 @@ end
 
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
-  # res = {challenge: params["challenge"]}
+  res = {challenge: params["challenge"]}
   user_info = exportMemberInfo(WORKSPACE_TOKEN, params['event']['user'])
-  # talk({"text": user_info})
   user_name = user_info["profile"]["display_name"]
-  talk({"text": user_name})
-  # json res
+  talk({"text": "Hellow" + user_name})
 end
 
 def talk(content)
