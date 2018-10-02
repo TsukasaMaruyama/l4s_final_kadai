@@ -25,7 +25,7 @@ def talk(content)
 end
 
 post '/event_catch' do
-  params = JSON.parse request.body.read
+  # params = JSON.parse request.body.read
   talk({"text": params["payload"]})
   json params
 end
