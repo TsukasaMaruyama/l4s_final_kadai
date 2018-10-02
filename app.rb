@@ -18,18 +18,19 @@ end
 
 def exportMemberInfo(workspace_token,member_id)
   url = SLACK＿API_BASE + "users.info?token=" + workspace_token + "&user=" + member_id + "&pretty=1"
-  res1 = Net::HTTP.get_print(URI.parse(url))
-  res = JSON.parse(res1)
-  return res['user']
+  res = Net::HTTP.get(URI.parse(url))
+  res = JSON.parse(res)["user"]
+  return res
 end
 
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
-  res = {challenge: params["challenge"]}
+  # res = {challenge: params["challenge"]}
   user_info = exportMemberInfo(WORKSPACE_TOKEN, params['event']['user'])
-  user_name = user_info["name"]
+  # talk({"text": user_info})
+  user_name = user_info["profile"]["display_name"]
   talk({"text": user_name})
-  json res
+  # json res
 end
 
 def talk(content)
