@@ -28,6 +28,7 @@ post '/mokmoks/create' do
   res = {challenge: params["challenge"]}
   user_info = exportMemberInfo(WORKSPACE_TOKEN, params['event']['user'])
   user_name = user_info["profile"]["display_name"]
+  text = params["text"]
   talk({"text": "Hello! " + user_name})
 end
 
