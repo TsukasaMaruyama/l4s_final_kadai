@@ -29,7 +29,7 @@ post '/mokmoks/create' do
   user_info = exportMemberInfo(WORKSPACE_TOKEN, params['event']['user'])
   user_name = user_info["profile"]["display_name"]
   text = params["text"]
-  talk({"text": "Hello! " + user_name})
+  talk({"text": "Hello! " + user_name + " " + text})
 end
 
 def talk(content)
