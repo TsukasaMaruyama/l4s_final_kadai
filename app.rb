@@ -6,10 +6,27 @@ require 'sinatra/reloader' if development?
 require 'net/http'
 require 'uri'
 
+SLACK＿API_BASE = "https://slack.com/api/";
+WORKSPACE_TOKEN = "xoxp-414625309937-415718066981-447003139841-5f842f459142c99a295a7cdb1d87ac2e"
+
+def exportMemberIds(workspace_token,channel)
+  url = SLACK＿API_BASE + "channels.info?token=" + workspace_token + "&channel=" + channel + "&pretty=1"
+  res = Net::HTTP.get_print(URI.parse(url))
+  res = JSON.parse(res)
+  return res['channel']['members']
+end
+
+def exportMemberInfo(workspace_token,member_id)
+  url = SLACK＿API_BASE + "users.info?token=" + workspace_token + "&user=" + member_id + "&pretty=1"
+  res = Net::HTTP.get_print(URI.parse(url))
+  res = JSON.parse(res)
+  return res['user']
+end
+
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
   res = {challenge: params["challenge"]}
-  talk({"text": params["event"]})
+  talk({"text": params["event"]['user']})
   json res
 end
 
