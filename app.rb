@@ -9,6 +9,7 @@ require 'uri'
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
   res = {challenge: params["challenge"]}
+  talk({"text": params["payload"]})
   json res
 end
 
@@ -25,7 +26,7 @@ def talk(content)
 end
 
 post '/event_catch' do
-  # params = JSON.parse request.body.read
+  data = params["payload"]
   talk({"text": params["payload"]})
   json params
 end
