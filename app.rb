@@ -18,8 +18,8 @@ end
 
 def exportMemberInfo(workspace_token,member_id)
   url = SLACK＿API_BASE + "users.info?token=" + workspace_token + "&user=" + member_id + "&pretty=1"
-  res = Net::HTTP.get_print(URI.parse(url))
-  res = JSON.parse(res)
+  res1 = Net::HTTP.get_print(URI.parse(url))
+  res = JSON.parse(res1)
   return res['user']
 end
 
