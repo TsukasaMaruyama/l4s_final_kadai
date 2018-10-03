@@ -29,6 +29,7 @@ post '/mokmoks/create' do
   user_info = exportMemberInfo(WORKSPACE_TOKEN, params['event']['user'])
   user_name = user_info["profile"]["display_name"]
   text = params["event"]["text"]
+  talk({"text": params["challenge"]})
   talk({"text": "Hello! " + user_name + " " + text})
 end
 
@@ -45,6 +46,12 @@ def talk(content)
 end
 
 post '/event_catch' do
+  json_data = JSON.parse request.body.read
+
+  if json_data["challenge"]
+    res = {challenge: json_data["challenge"]}
+    json res
+  end
   data = params["payload"]
   talk({"text": params["payload"]})
   json params
