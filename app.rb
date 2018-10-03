@@ -23,6 +23,11 @@ def exportMemberInfo(workspace_token,member_id)
   return res
 end
 
+def exportMemberName(workspace_token, member_id)
+  res = exportMemberInfo(workspace_token, member_id)
+  return res["profile"]["display_name"]
+end
+
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
   res = {challenge: params["challenge"]}
@@ -51,6 +56,14 @@ post '/event_catch' do
   if json_data["challenge"]
     res = {challenge: json_data["challenge"]}
     json res
+  end
+
+  event_type = json_data["event"]["type"]
+
+  if event_type == "app_mention"
+    if json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
+      talk({text: "もくもく会しよう"})
+    end
   end
   # data = params["payload"]
   # talk({"text": params["payload"]})
