@@ -108,7 +108,7 @@ end
 # ボタンなど押した時に最初に呼ばれるところ
 post '/event_catch_post' do
   payload = JSON.parse(params["payload"])
-  talk({"text": payload})
+  # talk({"text": payload})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name})
 end
