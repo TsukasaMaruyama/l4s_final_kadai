@@ -48,7 +48,7 @@ def postMokMok()
           },
           {
             "name": "mokmok",
-            "text": "参加しない",
+            "text": "詳細をみる",
             "type": "button",
             "value": "false"
           }
@@ -107,6 +107,8 @@ end
 # https://api.slack.com/apps/AD4E4GT8B/interactive-messages?
 # ボタンなど押した時に最初に呼ばれるところ
 post '/event_catch_post' do
+  payload = params["payload"]
+  user_name = exportMemberName(WORKSPACE_TOKEN,params["payload"]["user"]["id"])
 
 end
 
