@@ -84,7 +84,7 @@ post '/mokmoks/create' do
 end
 
 def talk(content)
-  uri = URI.parse("https://hooks.slack.com/services/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")
+  uri = URI.parse("https://hooks.slack.com/services/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")
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true # HTTPSでよろしく
   req = Net::HTTP::Post.new(uri.request_uri)
