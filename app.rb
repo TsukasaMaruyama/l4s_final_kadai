@@ -25,7 +25,7 @@ end
 
 def exportMemberName(workspace_token, member_id)
   res = exportMemberInfo(workspace_token, member_id)
-  return res["profile"]["display_name"]
+  return res["profile"]["real_name"]
 end
 
 def postMokMok()
