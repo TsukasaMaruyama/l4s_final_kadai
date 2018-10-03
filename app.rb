@@ -53,9 +53,7 @@ end
 # イベントサブスクリプションのイベント
 # https://api.slack.com/apps/AD4E4GT8B/event-subscriptions?
 post '/event_catch_json' do
-  if
-    json_data = JSON.parse request.body.read
-  end
+  json_data = JSON.parse request.body.read
 
   if json_data["challenge"]
     res = {challenge: json_data["challenge"]}
