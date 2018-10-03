@@ -124,7 +124,7 @@ post '/event_catch_post' do
   #  user_name= params["challenge"]
   # talk({"text": params["payload"]})
 
-  talk({"text": params["payload"]})
+  # talk({"text": params["payload"]})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name})
 end
