@@ -25,7 +25,6 @@ end
 
 def exportMemberName(workspace_token, member_id)
   res = exportMemberInfo(workspace_token, member_id)
-  talk({"text": res.to_json})
   return res["profile"]["display_name"]
 end
 
@@ -124,8 +123,6 @@ post '/event_catch_post' do
   payload = JSON.parse(params["payload"])
   #  user_name= params["challenge"]
   # talk({"text": params["payload"]})
-  talk({"text": exportMemberInfo(WORKSPACE_TOKEN, payload["user"]["id"]).to_json})
-  talk({"text": payload["user"]["id"]})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name})
 end
