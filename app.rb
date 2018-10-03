@@ -25,6 +25,7 @@ end
 
 def exportMemberName(workspace_token, member_id)
   res = exportMemberInfo(workspace_token, member_id)
+  talk({"text": JSON.parse(res)})
   return res["profile"]["display_name"]
 end
 
