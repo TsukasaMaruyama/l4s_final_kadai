@@ -54,12 +54,11 @@ end
 # イベントサブスクリプションのイベント
 # https://api.slack.com/apps/AD4E4GT8B/event-subscriptions?
 post '/event_catch_json' do
-  json_data = JSON.parse request.body.read
+  json_data = JSON.parse(request.body.read)
 
   if json_data["challenge"]
-    res = {challenge: json_data["challenge"]}
-    talk({"text": json_data["challenge"]})
-    json res
+    res = {"challenge": "ss"}
+    # talk({"text": json_data["challenge"]})
   end
 
   if json_data["event"]
@@ -71,7 +70,7 @@ post '/event_catch_json' do
       talk({text: "もくもく会しよう"})
     end
   end
-
+  json res
 end
 
 # インタラクティブコンポーネントのイベント
