@@ -57,7 +57,7 @@ post '/event_catch_json' do
 
   if json_data["challenge"]
     res = {"challenge": json_data["challenge"]}
-    talk({"text": json_data})
+    talk({"text": json_data["challenge"]})
     json res
   end
 
