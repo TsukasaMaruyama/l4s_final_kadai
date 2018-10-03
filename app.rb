@@ -110,7 +110,7 @@ post '/event_catch_post' do
   payload = params["payload"]
   talk({"text": payload})
   user_info = exportMemberInfo(WORKSPACE_TOKEN,params["payload"]["user"]["id"])
-  talk({"text": user_info"profile"]["display_name"]})
+  talk({"text": user_info["profile"]["display_name"]})
 end
 
 
