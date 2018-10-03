@@ -52,9 +52,9 @@ post '/event_catch' do
     res = {challenge: json_data["challenge"]}
     json res
   end
-  data = params["payload"]
-  talk({"text": params["payload"]})
-  json params
+  # data = params["payload"]
+  # talk({"text": params["payload"]})
+  # json params
 end
 
 get '/mokmoks/create' do
