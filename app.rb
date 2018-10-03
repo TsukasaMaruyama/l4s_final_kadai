@@ -7,7 +7,7 @@ require 'net/http'
 require 'uri'
 
 SLACK＿API_BASE = "https://slack.com/api/";
-WORKSPACE_TOKEN = "xoxp-414625309937-415718066981-447003139841-5f842f459142c99a295a7cdb1d87ac2e"
+WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448758242373-a69df99a15f43fca50947422635deba4"
 
 def exportMemberIds(workspace_token,channel)
   url = SLACK＿API_BASE + "channels.info?token=" + workspace_token + "&channel=" + channel + "&pretty=1"
@@ -84,7 +84,7 @@ post '/mokmoks/create' do
 end
 
 def talk(content)
-  uri = URI.parse("https://hooks.slack.com/services/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")
+  uri = URI.parse("https://hooks.slack.com/services/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")
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true # HTTPSでよろしく
   req = Net::HTTP::Post.new(uri.request_uri)
