@@ -54,6 +54,7 @@ def postMokMok(){
       }
     ]
   }
+  talk(content)
 }
 
 post '/mokmoks/create' do
