@@ -7,7 +7,7 @@ require 'net/http'
 require 'uri'
 
 SLACK＿API_BASE = "https://slack.com/api/";
-WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448843849461-656076422bd19404701558f0d70b4f7d"
+WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa066a0c20fb26ad5"
 
 def exportMemberIds(workspace_token,channel)
   url = SLACK＿API_BASE + "channels.info?token=" + workspace_token + "&channel=" + channel + "&pretty=1"
