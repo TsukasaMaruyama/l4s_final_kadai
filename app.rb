@@ -120,9 +120,9 @@ end
 # https://api.slack.com/apps/AD4E4GT8B/interactive-messages?
 # ボタンなど押した時に最初に呼ばれるところ
 post '/event_catch_post' do
-  # payload = JSON.parse(params["payload"])
-   user_name= params["challenge"]
-  # user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
+  payload = JSON.parse(params["payload"])
+  #  user_name= params["challenge"]
+  user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   # talk({"text": user_name})
 end
 
