@@ -28,6 +28,66 @@ def exportMemberName(workspace_token, member_id)
   return res["profile"]["real_name"]
 end
 
+def createMokMok()
+  content =
+  {
+    "text": "Would you like to play a game?",
+    "response_type": "in_channel",
+    "attachments": [
+        {
+            "text": "Choose a game to play",
+            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "callback_id": "game_selection",
+            "actions": [
+                {
+                    "name": "games_list",
+                    "text": "Pick a game...",
+                    "type": "select",
+                    "options": [
+                        {
+                            "text": "Hearts",
+                            "value": "hearts"
+                        },
+                        {
+                            "text": "Bridge",
+                            "value": "bridge"
+                        },
+                        {
+                            "text": "Checkers",
+                            "value": "checkers"},
+                        {
+                            "text": "Chess",
+                            "value": "chess"
+                        },
+                        {
+                            "text": "Poker",
+                            "value": "poker"
+                        },
+                        {
+                            "text": "Falken's Maze",
+                            "value": "maze"
+                        },
+                        {
+                            "text": "Global Thermonuclear War",
+                            "value": "war"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+talk(content);
+
+end
+
+get '/debug/createMokMok' do
+  createMokMok()
+end
+
 def postMokMok()
   content =
   {
@@ -124,10 +184,10 @@ post '/event_catch_post' do
   #  user_name= params["challenge"]
   # talk({"text": params["payload"]})
 
-  # talk({"text": params["payload"]})
+  talk({"text": params["payload"]})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name + "さんが参加します"})
-  ""
+
   return
 end
 
