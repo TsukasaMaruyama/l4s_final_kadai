@@ -75,6 +75,42 @@ def createMokMok()
                         }
                     ]
                 }
+            ],
+            "actions": [
+                {
+                    "name": "games_list",
+                    "text": "Pick a game...",
+                    "type": "select",
+                    "options": [
+                        {
+                            "text": "Hearts",
+                            "value": "hearts"
+                        },
+                        {
+                            "text": "Bridge",
+                            "value": "bridge"
+                        },
+                        {
+                            "text": "Checkers",
+                            "value": "checkers"},
+                        {
+                            "text": "Chess",
+                            "value": "chess"
+                        },
+                        {
+                            "text": "Poker",
+                            "value": "poker"
+                        },
+                        {
+                            "text": "Falken's Maze",
+                            "value": "maze"
+                        },
+                        {
+                            "text": "Global Thermonuclear War",
+                            "value": "war"
+                        }
+                    ]
+                }
             ]
         }
     ]
