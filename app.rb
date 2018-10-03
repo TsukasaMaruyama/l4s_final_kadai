@@ -50,8 +50,10 @@ def talk(content)
   https.request(req)
 end
 
-post '/event_catch' do
-  if JSON
+# イベントサブスクリプションのイベント
+# https://api.slack.com/apps/AD4E4GT8B/event-subscriptions?
+post '/event_catch_json' do
+  if
     json_data = JSON.parse request.body.read
   end
 
@@ -72,6 +74,14 @@ post '/event_catch' do
   talk({"text": params["payload"]})
   # json params
 end
+
+# インタラクティブコンポーネントのイベント
+# https://api.slack.com/apps/AD4E4GT8B/interactive-messages?
+# ボタンなど押した時に最初に呼ばれるところ
+post '/event_catch_post' do
+
+end
+
 
 get '/mokmoks/create' do
   content = {
