@@ -29,33 +29,46 @@ def exportMemberName(workspace_token, member_id)
 end
 
 def postMokMok()
-  content = {
-    "text": "もくもく会",
-    "attachments":
-    [
-      {
-        "fallback": "You are unable to choose a game",
-        "callback_id": "participate_mokmok",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions":
-        [
-          {
-            "name": "mokmok",
-            "text": "参加する",
-            "type": "button",
-            "value": "true"
-          },
-          {
-            "name": "mokmok",
-            "text": "詳細をみる",
-            "type": "button",
-            "value": "false"
-          }
-        ]
-      }
+  content =
+  {
+    "text": "Would you like to play a game?",
+    "attachments": [
+        {
+            "text": "Choose a game to play",
+            "fallback": "You are unable to choose a game",
+            "callback_id": "wopr_game",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "game",
+                    "text": "Chess",
+                    "type": "button",
+                    "value": "chess"
+                },
+                {
+                    "name": "game",
+                    "text": "Falken's Maze",
+                    "type": "button",
+                    "value": "maze"
+                },
+                {
+                    "name": "game",
+                    "text": "Thermonuclear War",
+                    "style": "danger",
+                    "type": "button",
+                    "value": "war",
+                    "confirm": {
+                        "title": "Are you sure?",
+                        "text": "Wouldn't you prefer a good game of chess?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
+                }
+            ]
+        }
     ]
-  }
+}
   talk(content)
 end
 
@@ -111,9 +124,7 @@ post '/event_catch_post' do
    user_name= params["challenge"]
   # user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name})
-  "aaaa"
 end
-
 
 get '/mokmoks/create' do
   content = {
