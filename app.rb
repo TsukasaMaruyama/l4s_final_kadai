@@ -67,10 +67,6 @@ post '/event_catch_json' do
       talk({text: "もくもく会しよう"})
     end
   end
-
-  data = params["payload"]
-  talk({"text": params["payload"]})
-  # json params
 end
 
 # インタラクティブコンポーネントのイベント
