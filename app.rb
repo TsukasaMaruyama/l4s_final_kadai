@@ -28,16 +28,18 @@ def exportMemberName(workspace_token, member_id)
   return res["profile"]["display_name"]
 end
 
-def postMokMok(){
+def postMokMok()
   content = {
     "text": "もくもく会",
-    "attachments": [
+    "attachments":
+    [
       {
         "fallback": "You are unable to choose a game",
         "callback_id": "participate_mokmok",
         "color": "#3AA3E3",
         "attachment_type": "default",
-        "actions": [
+        "actions":
+        [
           {
             "name": "mokmok",
             "text": "参加する",
@@ -55,7 +57,7 @@ def postMokMok(){
     ]
   }
   talk(content)
-}
+end
 
 post '/mokmoks/create' do
   params = JSON.parse request.body.read
@@ -94,7 +96,7 @@ post '/event_catch_json' do
   end
 
   if event_type == "app_mention"
-    if json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
+    if true || json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
       talk({text: "もくもく会しよう"})
       postMokMok()
     end
