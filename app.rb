@@ -127,6 +127,26 @@ def createMokMok()
 
 talk(content);
 
+dialog =
+{
+    "token": "xoxxxxxxx...xxxxxxxx",//OAuth token
+    "trigger_id": trigger_id,
+    "dialog": JSON.stringify({
+      "callback_id": "dialog",
+      "title": "ここに題名。",
+      "submit_label": "Submit",
+      "elements": [
+        {
+          "type": "text",
+          "label": "題名",
+          "name": "dialg_subject",
+          "placeholder":"題名を入力..."
+        }
+      ]
+    })
+  }
+  talk(dialog)
+
 end
 
 get '/debug/createMokMok' do
