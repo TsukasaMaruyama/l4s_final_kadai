@@ -60,7 +60,9 @@ post '/event_catch_json' do
     json res
   end
 
-  event_type = json_data["event"]["type"]
+  if json_data["event"]
+    event_type = json_data["event"]["type"]
+  end
 
   if event_type == "app_mention"
     if json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
