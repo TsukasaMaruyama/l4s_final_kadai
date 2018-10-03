@@ -97,7 +97,6 @@ post '/event_catch_json' do
 
   if event_type == "app_mention"
     if true || json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
-      talk({text: "もくもく会しよう"})
       postMokMok()
     end
   end
