@@ -124,6 +124,7 @@ post '/event_catch_post' do
   payload = JSON.parse(params["payload"])
   #  user_name= params["challenge"]
   # talk({"text": params["payload"]})
+  talk({"text": exportMemberInfo(WORKSPACE_TOKEN, payload["user"]["id"])})
   talk({"text": payload["user"]["id"]})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
   talk({"text": user_name})
