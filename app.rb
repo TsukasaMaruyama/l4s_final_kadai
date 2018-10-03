@@ -51,7 +51,9 @@ def talk(content)
 end
 
 post '/event_catch' do
-  json_data = JSON.parse request.body.read
+  if JSON
+    json_data = JSON.parse request.body.read
+  end
 
   if json_data["challenge"]
     res = {challenge: json_data["challenge"]}
