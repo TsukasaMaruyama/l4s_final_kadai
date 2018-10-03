@@ -74,8 +74,16 @@ def createMokMok()
                             "value": "war"
                         }
                     ]
-                }
-            ],
+                },
+
+            ]
+        },
+        {
+            "text": "Choose a game to play",
+            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "callback_id": "game_selection",
             "actions": [
                 {
                     "name": "games_list",
@@ -110,7 +118,8 @@ def createMokMok()
                             "value": "war"
                         }
                     ]
-                }
+                },
+
             ]
         }
     ]
