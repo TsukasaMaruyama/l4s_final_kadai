@@ -126,7 +126,9 @@ post '/event_catch_post' do
 
   # talk({"text": params["payload"]})
   user_name = exportMemberName(WORKSPACE_TOKEN, payload["user"]["id"])
-  talk({"text": user_name})
+  talk({"text": user_name + "さんが参加します"})
+  ""
+  return
 end
 
 get '/mokmoks/create' do
