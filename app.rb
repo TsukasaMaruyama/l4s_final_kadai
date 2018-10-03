@@ -65,8 +65,9 @@ post '/event_catch' do
       talk({text: "もくもく会しよう"})
     end
   end
-  # data = params["payload"]
-  # talk({"text": params["payload"]})
+
+  data = params["payload"]
+  talk({"text": params["payload"]})
   # json params
 end
 
