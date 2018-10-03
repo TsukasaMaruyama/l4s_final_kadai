@@ -36,6 +36,7 @@ post '/mokmoks/create' do
   text = params["event"]["text"]
   talk({"text": params["challenge"]})
   talk({"text": "Hello! " + user_name + " " + text})
+  json res
 end
 
 def talk(content)
