@@ -56,7 +56,8 @@ post '/event_catch_json' do
   json_data = JSON.parse request.body.read
 
   if json_data["challenge"]
-    res = {challenge: json_data["challenge"]}
+    res = {"challenge": json_data["challenge"]}
+    talk({"text": json_data})
     json res
   end
 
