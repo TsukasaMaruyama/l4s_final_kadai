@@ -30,7 +30,7 @@ end
 end
 
 def openDialog(dialog, trigger_id)
-  res = httpsPost('https://slack.com/api/dialog.open', {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
+  res = httpsPost('https://slack.com/api/dialog.open', {'trigger_id' => trigger_id, 'dialog' => dialog.to_json})
   return res.body
 end
 
