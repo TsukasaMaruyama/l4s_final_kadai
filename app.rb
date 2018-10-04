@@ -125,13 +125,14 @@ def createMokMok()
     ]
 }
 
-talk(content);
+# talk(content);
 
 dialog =
 {
     "token": "xoxxxxxxx...xxxxxxxx",
-    "trigger_id": trigger_id,
-    "dialog": JSON.stringify({
+    "trigger_id": "aaa",
+    "dialog":
+    {
       "callback_id": "dialog",
       "title": "ここに題名。",
       "submit_label": "Submit",
@@ -140,12 +141,13 @@ dialog =
           "type": "text",
           "label": "題名",
           "name": "dialg_subject",
-          "placeholder":"題名を入力..."
+          "placeholder": "題名を入力..."
         }
       ]
-    })
+    }.to_json
   }
   talk(dialog)
+  talk({"text": "<a>aaaaa</a>"}
 
 end
 
