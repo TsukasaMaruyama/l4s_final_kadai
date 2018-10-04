@@ -25,11 +25,12 @@ http.set_debug_output $stderr
 
 http.start do |h|
   response = h.request(request)
+  return response
 end
 end
 
 def openDialog(dialog, trigger_id)
-  httpsPost('https://slack.com/api/dialog.open', {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
+  res = httpsPost('https://slack.com/api/dialog.open', {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
   return res.body
 end
 
