@@ -12,9 +12,6 @@ WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa
 def openDialog(dialog, trigger_id)
   res = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
                           {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
-  payload = content.to_json
-  req.body = payload # リクエストボデーにJSONをセット
-  https.request(req)
 end
 
 def exportMemberIds(workspace_token,channel)
