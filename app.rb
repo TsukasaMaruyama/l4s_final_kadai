@@ -184,6 +184,7 @@ dialog =
 
 openDialog(dialog,trigger_id)
 talk({"text": trigger_id})
+return
 end
 
 def postMokMok()
