@@ -129,7 +129,7 @@ talk(content);
 
 dialog =
 {
-    "token": "xoxxxxxxx...xxxxxxxx",//OAuth token
+    "token": "xoxxxxxxx...xxxxxxxx",
     "trigger_id": trigger_id,
     "dialog": JSON.stringify({
       "callback_id": "dialog",
