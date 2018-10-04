@@ -34,7 +34,7 @@ def openDialog(dialog, trigger_id)
   res2 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
                           {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
   res3 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
-                          {'trigger_id'=>trigger_id, 'dialog'=> dialog}.to_json)
+                          {'trigger_id'=>trigger_id, 'dialog'=> dialog})
   return res.body + res2.body
 end
 
