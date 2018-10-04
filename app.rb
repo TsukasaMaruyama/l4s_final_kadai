@@ -9,9 +9,27 @@ require 'uri'
 SLACK＿API_BASE = "https://slack.com/api/";
 WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa066a0c20fb26ad5"
 
+def httpsPost(url, body)
+  uri = URI.parse(url)
+
+response = nil
+
+request = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'application/json'})
+request.body = body.to_json
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+http.set_debug_output $stderr
+
+http.start do |h|
+  response = h.request(request)
+end
+end
+
 def openDialog(dialog, trigger_id)
-  res = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
-                          {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
+  httpsPost('https://slack.com/api/dialog.open', {'dialog' => dialog.to_json, 'trigger_id' => trigger_id})
   return res.body
 end
 
@@ -32,133 +50,6 @@ end
 def exportMemberName(workspace_token, member_id)
   res = exportMemberInfo(workspace_token, member_id)
   return res["profile"]["real_name"]
-end
-
-def createMokMok()
-  content =
-  {
-    "text": "Would you like to play a game?",
-    "response_type": "in_channel",
-    "attachments": [
-        {
-            "text": "Choose a game to play",
-            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            "callback_id": "game_selection",
-            "actions": [
-                {
-                    "name": "games_list",
-                    "text": "Pick a game...",
-                    "type": "select",
-                    "options": [
-                        {
-                            "text": "Hearts",
-                            "value": "hearts"
-                        },
-                        {
-                            "text": "Bridge",
-                            "value": "bridge"
-                        },
-                        {
-                            "text": "Checkers",
-                            "value": "checkers"},
-                        {
-                            "text": "Chess",
-                            "value": "chess"
-                        },
-                        {
-                            "text": "Poker",
-                            "value": "poker"
-                        },
-                        {
-                            "text": "Falken's Maze",
-                            "value": "maze"
-                        },
-                        {
-                            "text": "Global Thermonuclear War",
-                            "value": "war"
-                        }
-                    ]
-                },
-
-            ]
-        },
-        {
-            "text": "Choose a game to play",
-            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            "callback_id": "game_selection",
-            "actions": [
-                {
-                    "name": "games_list",
-                    "text": "Pick a game...",
-                    "type": "select",
-                    "options": [
-                        {
-                            "text": "Hearts",
-                            "value": "hearts"
-                        },
-                        {
-                            "text": "Bridge",
-                            "value": "bridge"
-                        },
-                        {
-                            "text": "Checkers",
-                            "value": "checkers"},
-                        {
-                            "text": "Chess",
-                            "value": "chess"
-                        },
-                        {
-                            "text": "Poker",
-                            "value": "poker"
-                        },
-                        {
-                            "text": "Falken's Maze",
-                            "value": "maze"
-                        },
-                        {
-                            "text": "Global Thermonuclear War",
-                            "value": "war"
-                        }
-                    ]
-                },
-
-            ]
-        }
-    ]
-}
-
-# talk(content);
-
-dialog =
-{
-  "callback_id": "ryde-46e2b0",
-  "title": "Request a Ride",
-  "submit_label": "Request",
-  "state": "Limo",
-  "elements": [
-    {
-      "type": "text",
-      "label": "Pickup Location",
-      "name": "loc_origin"
-    },
-    {
-      "type": "text",
-      "label": "Dropoff Location",
-      "name": "loc_destination"
-    }
-  ]
-}
-
-openDialog(dialog)
-
-end
-
-get '/debug/createMokMok' do
-  createMokMok()
 end
 
 post '/create_mokmok' do
