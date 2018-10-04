@@ -185,7 +185,7 @@ dialog =
   ]
 }
 
-openDialog(dialog)
+openDialog(dialog,trigger_id)
 talk({"text": trigger_id})
 end
 
