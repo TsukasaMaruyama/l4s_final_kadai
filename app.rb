@@ -168,7 +168,7 @@ get '/debug/createMokMok' do
   createMokMok()
 end
 
-get '/create_mokmok' do
+post '/create_mokmok' do
   dialog =
 {
   "callback_id": "ryde-46e2b0",
