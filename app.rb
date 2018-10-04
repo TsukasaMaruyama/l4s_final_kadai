@@ -9,9 +9,22 @@ require 'uri'
 SLACK＿API_BASE = "https://slack.com/api/";
 WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa066a0c20fb26ad5"
 
+def openDialog(content)
+  url = "https://slack.com/api/dialog.open";
+  uri = URI.parse(url)
+  https = Net::HTTP.new(uri.host, uri.port)
+  https.use_ssl = true # HTTPSでよろしく
+  req = Net::HTTP::Post.new(uri.request_uri)
+
+  req["Content-Type"] = "application/json" # httpリクエストヘッダの追加
+  payload = content.to_json
+  req.body = payload # リクエストボデーにJSONをセット
+  https.request(req)
+end
+
 def exportMemberIds(workspace_token,channel)
   url = SLACK＿API_BASE + "channels.info?token=" + workspace_token + "&channel=" + channel + "&pretty=1"
-  res = Net::HTTP.get_print(URI.parse(url))
+  res = Net::HTTP.get(URI.parse(url))
   res = JSON.parse(res)
   return res['channel']['members']
 end
@@ -129,30 +142,56 @@ def createMokMok()
 
 dialog =
 {
-    "token": "xoxxxxxxx...xxxxxxxx",
-    "trigger_id": "aaa",
-    "dialog":
+  "callback_id": "ryde-46e2b0",
+  "title": "Request a Ride",
+  "submit_label": "Request",
+  "state": "Limo",
+  "elements": [
     {
-      "callback_id": "dialog",
-      "title": "ここに題名。",
-      "submit_label": "Submit",
-      "elements": [
-        {
-          "type": "text",
-          "label": "題名",
-          "name": "dialg_subject",
-          "placeholder": "題名を入力..."
-        }
-      ]
-    }.to_json
-  }
-  talk(dialog)
-  talk({"text": "<a>aaaaa</a>"}
+      "type": "text",
+      "label": "Pickup Location",
+      "name": "loc_origin"
+    },
+    {
+      "type": "text",
+      "label": "Dropoff Location",
+      "name": "loc_destination"
+    }
+  ]
+}
+
+openDialog(dialog)
 
 end
 
 get '/debug/createMokMok' do
   createMokMok()
+end
+
+get '/create_mokmok' do
+  dialog =
+{
+  "callback_id": "ryde-46e2b0",
+  "title": "Request a Ride",
+  "submit_label": "Request",
+  "state": "Limo",
+  "elements": [
+    {
+      "type": "text",
+      "label": "Pickup Location",
+      "name": "loc_origin"
+    },
+    {
+      "type": "text",
+      "label": "Dropoff Location",
+      "name": "loc_destination"
+    }
+  ]
+}
+
+openDialog(dialog)
+trigger_id = params[:trigger_id]
+talk({"text": trigger_id})
 end
 
 def postMokMok()
