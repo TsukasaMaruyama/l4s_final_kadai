@@ -29,7 +29,7 @@ def openDialog(dialog, trigger_id)
     req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
     req.body = {'trigger_id': trigger_id, 'dialog': dialog.to_json}.to_json
     res = http.request(req)
-    puts "response #{res.body}"
+    puts "response #{res.body} #{res}"
   # res = httpPost('https://slack.com/api/dialog.open', {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
   return res
 end
