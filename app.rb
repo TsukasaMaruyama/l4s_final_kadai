@@ -23,7 +23,7 @@ res = https.request(req)
 end
 
 def openDialog(dialog, trigger_id)
-  res = Net::HTTP.post_form(URI.parse("https://slack.com/api/dialog.open"),{'trigger_id': trigger_id, 'dialog': dialog.to_json, 'token': WORKSPACE_TOKEN})
+  res = Net::HTTP.post_form(URI.parse("https://slack.com/api/dialog.open?token=#{WORKSPACE_TOKEN}&dialog=#{dialog.to_json}"),{'trigger_id': trigger_id, 'dialog': dialog.to_json, 'token': WORKSPACE_TOKEN})
   httpPost("https://slack.com/api/dialog.open?token=#{WORKSPACE_TOKEN}&dialog=#{dialog.to_json}", {'trigger_id'=>trigger_id, 'token': WORKSPACE_TOKEN ,'dialog'=>dialog.to_json})
   return res
 end
