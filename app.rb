@@ -80,7 +80,7 @@ dialog =
 
 res = openDialog(dialog,trigger_id)
 talk({"text": trigger_id})
-talk({"text": "res"+res.body})
+talk({"text": "res"+res.body+res.each_header})
 return
 end
 
