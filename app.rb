@@ -30,12 +30,11 @@ end
 end
 
 def openDialog(dialog, trigger_id)
-  res = httpsPost('https://slack.com/api/dialog.open', {'trigger_id' => trigger_id, 'dialog' => dialog.to_json})
-  res2 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
+  res = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
                           {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
-  res3 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
-                          {'trigger_id'=>trigger_id, 'dialog'=> dialog})
-  return res.body + res2.body + res3.body
+  # res3 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
+  #                         {'trigger_id'=>trigger_id, 'dialog'=> dialog})
+  return res
 end
 
 def exportMemberIds(workspace_token,channel)
@@ -81,7 +80,7 @@ dialog =
 
 res = openDialog(dialog,trigger_id)
 talk({"text": trigger_id})
-talk({"text": "res"+res})
+talk({"text": "res"+res.body+res.header})
 return
 end
 
