@@ -9,31 +9,23 @@ require 'uri'
 SLACK＿API_BASE = "https://slack.com/api/";
 WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa066a0c20fb26ad5"
 
-def httpsPost(url, body)
-  uri = URI.parse(url)
+def httpPost(url, body)
+  uri = URI.parse(URL)
+https = Net::HTTP.new(uri.host, uri.port)
 
-response = nil
+https.use_ssl = true # HTTPSでよろしく
+req = Net::HTTP::Post.new(uri.request_uri)
 
-request = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'application/json'})
-request.body = body.to_json
-
-http = Net::HTTP.new(uri.host, uri.port)
-http.use_ssl = true
-http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-http.set_debug_output $stderr
-
-http.start do |h|
-  response = h.request(request)
-  return response
-end
+req["Content-Type"] = "application/json"
+payload = body.to_json
+req.body = payload # リクエストボデーにJSONをセット
+res = https.request(req)
 end
 
 def openDialog(dialog, trigger_id)
-  res = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
+  Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
                           {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
-  # res3 = Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
-  #                         {'trigger_id'=>trigger_id, 'dialog'=> dialog})
+  res = httpPost('https://slack.com/api/dialog.open', {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
   return res
 end
 
@@ -80,7 +72,7 @@ dialog =
 
 res = openDialog(dialog,trigger_id)
 talk({"text": trigger_id})
-talk({"text": "res"+res.body+res.each_header})
+talk({"text": "res"+res.body})
 return
 end
 
