@@ -10,7 +10,7 @@ SLACK＿API_BASE = "https://slack.com/api/";
 WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-448060794785-8d27c6b6a6c815eaa066a0c20fb26ad5"
 
 def httpPost(url, body)
-  uri = URI.parse(URL)
+  uri = URI.parse(url)
 https = Net::HTTP.new(uri.host, uri.port)
 
 https.use_ssl = true # HTTPSでよろしく
