@@ -33,7 +33,7 @@ https.use_ssl = true # HTTPSでよろしく
 req = Net::HTTP::Post.new(uri.request_uri)
 
 req["Content-Type"] = "application/json"
-payload = {"trigger_id": trigger_id, 'dialog': dialog.to_json}.to_json
+payload = {"trigger_id": trigger_id, 'dialog': dialog}.to_json
 req.body = payload # リクエストボデーにJSONをセット
 res = https.request(req)
   # res = httpPost('https://slack.com/api/dialog.open', {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
