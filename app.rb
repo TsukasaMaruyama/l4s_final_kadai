@@ -24,7 +24,7 @@ end
 
 def openDialog(dialog, trigger_id)
   Net::HTTP.post_form(URI.parse('https://slack.com/api/dialog.open'),
-                          {'trigger_id'=>trigger_id, 'dialog'=>dialog.to_json})
+                          {'trigger_id': trigger_id, 'dialog': dialog.to_json})
   uri = URI.parse("https://slack.com/api/dialog.open")
 https = Net::HTTP.new(uri.host, uri.port)
 
