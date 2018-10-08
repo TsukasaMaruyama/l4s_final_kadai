@@ -1,0 +1,76 @@
+<div class="container">
+<% @mokmoks.each do |mokmok| %>
+
+
+
+<div class="mokmokCard">
+    <div class="mokmokDesc">
+        <a class="mokmokDesc__title" href="https://mokmok-aldytsukasa.c9users.io/mokmoks/view/<%= mokmok.id %>"><p><%= mokmok.title %></p></a><p class="mokmokDesc__channel"><%= @channels[mokmok.channel_id] %></p>
+        <p class="mokmokDesc__desc"><%= mokmok.description %></p>
+    </div>
+    <div class="mokmokCreator">
+        <p class="mokmokCreator__intro">作成者</p>
+        <img class="mokmokCreator__img" src="<%= @creators[mokmok.id]["image_72"] %>">
+        <p class="mokmokCreator__name"><%= @creators[mokmok.id]["real_name"] %></p>
+        <a class="mokmokCreator__participateBtn">もくもく会に参加する</a>
+    </div>
+</div>
+
+<% end %>
+</div>
+
+<style>
+    @import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+    /*font-family: Lato, "Noto Sans JP", "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;*/
+    .mokmokCard {
+        font-family: Lato, "Noto Sans JP", "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+        width: calc(50% - 20px);
+        margin: 10px;
+        padding: 30px 20px 10px;
+        box-shadow: #ddd 1px 1px 1px 1px;
+    }
+    .mokmokDesc {
+        margin-bottom: 30px;
+    }
+    .mokmokDesc__title {
+        font-weight: bold;
+        font-size: 20px;
+        text-description: none;
+        color: #333;
+        display: inline-block;
+    }
+    .mokmokDesc__channel {
+        padding-left:15px;
+        color: #888;
+        display: inline-block;
+    }
+    .mokmokDesc__desc {
+        color: #888;
+        overflow: hidden;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        height: 80px;
+    }
+    
+    .mokmokCreator {
+        
+    }
+    .mokmokCreator__intro {
+        padding: 0 10px;
+        display: inline-block;
+        color: #888;
+        font-size: 13px;
+    }
+    .mokmokCreator__img {
+        width: 72px;
+        height: 72px;
+        border-radius: 72px;
+        border:  1px solid #ccc;
+    }
+    .mokmokCreator__name {
+        padding-left: 20px;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 20px;
+    }
+</style>

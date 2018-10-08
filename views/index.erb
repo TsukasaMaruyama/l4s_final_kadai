@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="UTF-8">
-	<title>タイトル</title>
-</head>
-<body>
-</body>
-</html>
+<div class="container">
+<% @mokmoks.each do |mokmok| %>
+<h1><%= mokmok.title %></h1>
+<% end %>
+</div>
