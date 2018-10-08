@@ -1,9 +1,7 @@
 <div class="container">
+<div class="flexContainer col-xs-12">
 <% @mokmoks.each do |mokmok| %>
-
-
-
-<div class="mokmokCard">
+<div class="mokmokCard col-xs-6">
     <div class="mokmokDesc">
         <a class="mokmokDesc__title" href="https://mokmok-aldytsukasa.c9users.io/mokmoks/view/<%= mokmok.id %>"><p><%= mokmok.title %></p></a><p class="mokmokDesc__channel"><%= @channels[mokmok.channel_id] %></p>
         <p class="mokmokDesc__desc"><%= mokmok.description %></p>
@@ -12,14 +10,19 @@
         <p class="mokmokCreator__intro">作成者</p>
         <img class="mokmokCreator__img" src="<%= @creators[mokmok.id]["image_72"] %>">
         <p class="mokmokCreator__name"><%= @creators[mokmok.id]["real_name"] %></p>
-        <a class="mokmokCreator__participateBtn">もくもく会に参加する</a>
+        <a href="/mokmoks/participate/<%= mokmok.id %>?redirect_url=/mokmoks"><p class="mokmokCreator__participateBtn">もくもく会に参加する</p></a>
     </div>
 </div>
 
 <% end %>
 </div>
+</div>
 
 <style>
+    .flexContainer {
+        /*display:flex;*/
+        /*display: inline-flex;*/
+    }
     @import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
     /*font-family: Lato, "Noto Sans JP", "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;*/
     .mokmokCard {
@@ -49,7 +52,7 @@
         overflow: hidden;
         word-wrap: break-word;
         overflow-wrap: break-word;
-        height: 80px;
+        height: 50px;
     }
     
     .mokmokCreator {
@@ -62,9 +65,9 @@
         font-size: 13px;
     }
     .mokmokCreator__img {
-        width: 72px;
-        height: 72px;
-        border-radius: 72px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
         border:  1px solid #ccc;
     }
     .mokmokCreator__name {

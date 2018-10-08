@@ -1,0 +1,90 @@
+
+<div class="container">
+    <form action="/mokmoks/edit/<%= @mokmok.id %>" method="post" class="mokmokEditContainer">
+        <p class="mokmokEdit__bar">Edit MokMok</p>
+        <label for="title">Title</label><br>    
+        <input class="mokmokEdit__inputText" type="text" id="title" name="title" value="<%= @mokmok.title %>">
+        
+        <label for="description">Description</label><br>    
+        <textarea class="mokmokEdit__inputTextarea" id="description" name="description" rows="4"><%= @mokmok.description %></textarea><br>
+        
+        <label for="place">Place</label><br>    
+        <input class="mokmokEdit__inputText" id="place" type="text" name="place" value="<%= @mokmok.place %>">
+        
+        
+        
+        <label for="date">Date</label><br>  
+        <input type="date" name="date" value="<%= @start_day %>"><br>
+        
+        
+        <label for="start_time">Start Time</label><br>  
+        <select id="start_time" name="start_time">
+        <% @times.each do |time| %>
+            <% if @start_time.include?(time) %>
+            <option value="<%= time %>" selected><%= time %></option>
+            <% else %>
+            <option value="<%= time %>"><%= time %></option>
+            <% end %>
+        <% end %>
+        </select><br>
+        
+        
+        <label for="start_time">End Time</label><br>  
+        <select id="finish_time" name="finish_time">
+        <% @times.each do |time| %>
+            <% if @finish_time.include?(time) %>
+            <option value="<%= time %>" selected><%= time %></option>
+            <% else %>
+            <option value="<%= time %>"><%= time %></option>
+            <% end %>
+        <% end %>
+        </select><br>
+        
+        
+        <input type="submit" class="mokmokEdit__submit" value="Update">
+    </form>
+</div>
+
+<style>
+    .mokmokEdit__submit {
+        width: 100%;
+        background-color: #F57C00;
+        padding: 10px;
+        margin-top: 5px;
+        font-size: 20px;
+        margin-top: 20px;
+        color: white;
+    }
+    
+    .mokmokEdit__inputText {
+        width: 100%;
+        border: 1px solid black;
+        color: black;
+        padding: 10px;
+        margin-top: 5px;
+     }
+      
+     .mokmokEdit__inputTextarea {
+        width: 100%;
+        border: 1px solid black;
+        color: black;
+        padding: 10px;
+        margin-top: 5px;
+     }
+
+    .mokmokEditContainer {
+        margin: 30px 20%;
+    }
+    .mokmokEdit__bar {
+        background-color: #333;
+        color: white;
+        font-size: 25px;
+        font-weight: bold;
+        padding: 10px;
+    }
+    label {
+        margin-top: 20px;
+        font-size: 25px;
+    }
+</style>
+

@@ -14,13 +14,13 @@ SLACK＿API_BASE = "https://slack.com/api/";
 
 # アプリ固有のトークン
 # レガシートークンは使わない
-BOT_TOKEN = "xoxb-448569467826-451046062055-MpcbpQlJa9ZD1qaQPmMJ0KYd"
-OAUTH_TOKEN = "xoxp-448569467826-448569468674-451339389814-4ccc14ef139917905119c5f82cd21556"
-CLIENT_ID = "448569467826.449373732897"
-CLIENT_SECRET = "8d92c2a03da08e089138da5340f8845c"
+BOT_TOKEN = "xoxb-448569467826-451098991667-39AqkO6PGj8JEKr1LWrRjt7y"
+OAUTH_TOKEN = "xoxp-448569467826-448569468674-450584411937-180cb0ec96e2f9d565d4ab6d4550a1c5"
+CLIENT_ID = "448569467826.450449244064"
+CLIENT_SECRET = "c9979419009a91b22fc315e7f4531b72"
 
 # レガシートークン使いたくない
-WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-450685271188-8c0fccbb4a1cf6b51daa69f3accc4386"
+WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-451195508146-f6843738e33ad8e36945aa47acc90076"
 
 before do
 	unless 
@@ -60,7 +60,6 @@ end
 def exportAllChannelNames(oauth_token)
 	channels = exportChannelList(oauth_token)
 	names = {}
-	talk({text: channels.to_json})
 	channels.each {|channel|
 		names[channel["id"]] = channel["name"]
 	}
@@ -95,7 +94,6 @@ post '/create_mokmok' do
 		end
 		times << {label: time, value: time}
 	}
-	talk({text: dates.to_json})
 	dialog =
 	{
 		callback_id: "new_mokmok",
@@ -140,13 +138,11 @@ post '/create_mokmok' do
 		]
 	}
 	res = openDialog(dialog,trigger_id)
-	talk({text: trigger_id})
-	talk({text: "res"+res.body})
 	return
 end
 
 def talk(content)
-	talkWithWebhook(content,"https://hooks.slack.com/services/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")
+	talkWithWebhook(content,"https://hooks.slack.com/services/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")
 end
 
 # イベントサブスクリプションのイベント
@@ -163,8 +159,8 @@ post '/event_catch_json' do
 	end
 
 	if event_type == "app_mention"
-		if true || json_data["event"]["text"].include?("もくもく会") && json_data["event"]["text"].include?("作")
-			talk({text: "hello"})
+		if json_data["event"]["text"].include?("もくもく会") 
+			talk({text: "そうだ、もくもく会しよう"})
 		end
 	end
 	json res
@@ -176,11 +172,9 @@ end
 # https://api.slack.com/apps/AD4E4GT8B/interactive-messages?
 # ボタンなど押した時に最初に呼ばれるところ
 post '/event_catch_post' do
-	talk({text: "this is event catch post"})
 	payload = JSON.parse(params["payload"])
 	
 	type = payload["type"]
-	# talk({text: params["payload"]})
 	# ボタンが押された時
 	if type == "interactive_message"
 		if payload["callback_id"] == "participate_mokmok"
@@ -206,7 +200,6 @@ def createNewMokmok(payload)
 	title = payload["submission"]["title"]
 	date = payload["submission"]["date"]
 	place = payload["submission"]["place"]
-	# talk({"text": date + "T" + payload["submission"]["start_time"]})
 	start_date = DateTime.parse(date + "T" + payload["submission"]["start_time"])
 	finish_date = DateTime.parse(date + "T" + payload["submission"]["finish_time"])
 	
@@ -246,7 +239,7 @@ def createNewMokmok(payload)
 				},
 				{
 					title: "詳細URL",
-					text: "https://mokmok-aldytsukasa.c9users.io/mokmoks/#{mokmok.id}"
+					text: "https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}"
 				}
 		]
 	}
@@ -263,11 +256,10 @@ def participateMokmok(payload)
 			mokmok_id: mokmok_id,
 			user_id: user_id
 		)
-	end
-	mokmok = Mokmok.find(mokmok_id)
+		mokmok = Mokmok.find(mokmok_id)
 	user_name = exportMemberName(OAUTH_TOKEN, user_id)
-	# talk({text: user_name})
-	res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/detail/#{mokmok.id}", channel: mokmok.channel_id, token: BOT_TOKEN})
+	res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}", channel: mokmok.channel_id, token: BOT_TOKEN})
+	end
 end
 
 def talkWithWebhook(content, webhook)
@@ -296,11 +288,15 @@ end
 
 get '/mokmoks/view/:id' do
 	@mokmok = Mokmok.find(params[:id])
+	@creator = exportMemberInfo(WORKSPACE_TOKEN, @mokmok.creator_id)["profile"]
+	@participate_users = []
+	@mokmok.participate_users.each {|participate_user|
+		@participate_users << exportMemberInfo(WORKSPACE_TOKEN, participate_user.user_id)["profile"]
+	}
 	erb :mokmok_ditail
 end
 
 get '/mokmoks' do
-	talk({text: session[:team].to_json})
 	team_id = session[:team]["id"]
 	@mokmoks_created = Mokmok.where("team_id = ? AND creator_id = ?",team_id, session[:user]["id"])
 	
@@ -315,7 +311,6 @@ get '/mokmoks' do
 			}
 	}
 	@channels = exportAllChannelNames(BOT_TOKEN)
-	talk({text: @creators.to_json})
 	erb :mokmoks
 end
 
@@ -323,18 +318,29 @@ get '/signin' do
 	erb :signin
 end
 
+get '/mokmoks/participate/:mokmok_id' do
+	mokmok_id = params[:mokmok_id]
+	user_id = session[:user]["id"]
+	redirect_url = params[:redirect_url]
+	if ParticipateUser.find_by(user_id: user_id, mokmok_id: mokmok_id).nil?
+		ParticipateUser.create(
+			mokmok_id: mokmok_id,
+			user_id: user_id
+		)
+		
+	end
+	redirect redirect_url
+end
+
 get '/signin_with_slack' do
-	talk({text: params[:code]})
-	url = "https://slack.com/api/oauth.access?client_id=#{CLIENT_ID}&client_secret=#{CLIENT_SECRET}&code=#{params[:code]}"
+	url = "https://slack.com/api/oauth.access?client_id=#{CLIENT_ID}&client_secret=#{CLIENT_SECRET}&code=#{params[:code]}&pretty=1"
 	res = Net::HTTP.get(URI.parse(url))
 	data = JSON.parse(res)
-	# talk({text: res})
 	data = exportUserInfoWithAccessToken(data["access_token"])
 	data = symbolize_keys(data)
 	session[:user] = data[:user]
 	session[:team] = data[:team]
 	session[:channels] = getJoinedChannelIds(session[:user]["id"])
-	# talk({text: "this is use info " + session[:channels]})
 	redirect '/mokmoks'
 end
 
@@ -348,7 +354,6 @@ def getJoinedChannelIds(member_id)
 	url = "https://slack.com/api/channels.list?token=#{BOT_TOKEN}&pretty=1"
 	res = JSON.parse(Net::HTTP.get(URI.parse(url)))
 	channels = res["channels"]
-	talk({text: channels.to_json})
 	channel_ids = []
 	channels.each{|channel| 
 		member_ids = channel["members"]
@@ -362,3 +367,32 @@ end
 def symbolize_keys(hash)
   hash.map{|k,v| [k.to_sym, v] }.to_h
 end
+
+get "/mokmoks/edit/:id" do
+	@mokmok = Mokmok.find(params[:id])
+	@start_day = @mokmok.start_date.strftime("%Y-%m-%d")
+	@times = []
+	@start_time = @mokmok.start_date.strftime("%H:%M")
+	@finish_time = @mokmok.finish_date.strftime("%H:%M")
+	(0..47).each{ |num|
+		time = "#{num/2}:"
+		if num % 2 == 1
+			time = time + "30"
+		else
+			time = time + "00"
+		end
+		@times << time
+	}
+	erb :mokmok_edit
+end
+
+post "/mokmoks/edit/:id" do
+	id = params[:id]
+	date = params[:date]
+	start_date = DateTime.parse(date + " " + params[:start_time])
+	finish_date = DateTime.parse(date + " " + params[:finish_time])
+	@mokmok = Mokmok.find(params[:id])
+	@mokmok.update({title: params[:title], description: params[:description], start_date: start_date, finish_date: finish_date})
+	redirect "/mokmoks/view/#{id}"
+end
+
