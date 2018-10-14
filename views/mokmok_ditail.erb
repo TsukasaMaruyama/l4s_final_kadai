@@ -14,10 +14,10 @@
   <div>
   <div class="memnbersContainer">
     <p class="memberCord__role">MokMok Creator</p>
-
     <div class="memberCord">
       <img class="memberCord__img" src="<%= @creator["image_48"] %>">
       <p class="memberCord__name"><%= @creator["real_name"] %></p>
+      <a href="/mokmoks/edit/<%= @mokmok.id %>">編集する</a>
     </div>
     <p class="memberCord__role">MokMok Entrants</p>
     <% @participate_users.each do |participate_user| %>

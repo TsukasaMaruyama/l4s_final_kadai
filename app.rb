@@ -14,15 +14,16 @@ SLACK＿API_BASE = "https://slack.com/api/";
 
 # アプリ固有のトークン
 # レガシートークンは使わない
-BOT_TOKEN = "xoxb-448569467826-451098991667-39AqkO6PGj8JEKr1LWrRjt7y"
-OAUTH_TOKEN = "xoxp-448569467826-448569468674-450584411937-180cb0ec96e2f9d565d4ab6d4550a1c5"
-CLIENT_ID = "448569467826.450449244064"
-CLIENT_SECRET = "c9979419009a91b22fc315e7f4531b72"
+BOT_TOKEN = "xoxb-448569467826-451902602083-rYXvWShdzqUtLy3EDhBkiKqC"
+OAUTH_TOKEN = "xoxp-448569467826-448569468674-451388395729-7517eadcec39a1cd527b745144f90b7c"
+CLIENT_ID = "448569467826.451820329812"
+CLIENT_SECRET = "94835dfd6993840bfc5b8bb6bcc970aa"
 
 # レガシートークン使いたくない
-WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-451195508146-f6843738e33ad8e36945aa47acc90076"
+WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-453361585046-eae017ad3a2b046854c007d3c5cbf646"
 
 before do
+	@client_id = CLIENT_ID
 	unless 
 		request.path.include?('/signin') ||
 		request.path.include?('/create_mokmok') || 
@@ -36,6 +37,11 @@ before do
     	redirect "/signin"
     end  	
   end
+end
+
+def postRequest(url, content)
+	res = Net::HTTP.post_form(URI.parse(url),content)
+	return res
 end
 
 def openDialog(dialog, trigger_id)
@@ -142,7 +148,7 @@ post '/create_mokmok' do
 end
 
 def talk(content)
-	talkWithWebhook(content,"https://hooks.slack.com/services/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")
+	talkWithWebhook(content,"https://hooks.slack.com/services/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")
 end
 
 # イベントサブスクリプションのイベント
@@ -159,9 +165,6 @@ post '/event_catch_json' do
 	end
 
 	if event_type == "app_mention"
-		if json_data["event"]["text"].include?("もくもく会") 
-			talk({text: "そうだ、もくもく会しよう"})
-		end
 	end
 	json res
 end
@@ -218,6 +221,8 @@ def createNewMokmok(payload)
 	
 	participate_btn =
 	{
+		channel: channel_id,
+		token: BOT_TOKEN,
 		text: "もくもく会が作成されました",
 		attachments: 
 		[
@@ -241,10 +246,10 @@ def createNewMokmok(payload)
 					title: "詳細URL",
 					text: "https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}"
 				}
-		]
+		].to_json
 	}
-
-	talk(participate_btn)
+	
+	talkWithChannelId(participate_btn, channel_id)
 end
 
 def participateMokmok(payload)
@@ -257,8 +262,8 @@ def participateMokmok(payload)
 			user_id: user_id
 		)
 		mokmok = Mokmok.find(mokmok_id)
-	user_name = exportMemberName(OAUTH_TOKEN, user_id)
-	res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}", channel: mokmok.channel_id, token: BOT_TOKEN})
+		user_name = exportMemberName(OAUTH_TOKEN, user_id)
+		res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}"}, mokmok.channel_id)
 	end
 end
 
@@ -274,10 +279,11 @@ def talkWithWebhook(content, webhook)
 end
 
 # https://api.slack.com/methods/chat.postMessage
-def talkWithChannelId(content)
-	text = URI.encode(content[:text])
-	url = "https://slack.com/api/chat.postMessage?token=#{BOT_TOKEN}&channel=#{content[:channel]}&text=#{text}&pretty=1"
-	res = Net::HTTP.get(URI.parse(url))
+def talkWithChannelId(content, channel_id)
+	url = "https://slack.com/api/chat.postMessage"
+	content[:channel] = channel_id
+	content[:token] = BOT_TOKEN
+	res = postRequest(url, content)
 	return res
 end
 
@@ -288,10 +294,10 @@ end
 
 get '/mokmoks/view/:id' do
 	@mokmok = Mokmok.find(params[:id])
-	@creator = exportMemberInfo(WORKSPACE_TOKEN, @mokmok.creator_id)["profile"]
+	@creator = exportMemberInfo(BOT_TOKEN, @mokmok.creator_id)["profile"]
 	@participate_users = []
 	@mokmok.participate_users.each {|participate_user|
-		@participate_users << exportMemberInfo(WORKSPACE_TOKEN, participate_user.user_id)["profile"]
+		@participate_users << exportMemberInfo(BOT_TOKEN, participate_user.user_id)["profile"]
 	}
 	erb :mokmok_ditail
 end
@@ -304,10 +310,10 @@ get '/mokmoks' do
 	@creators = {}
 	@participate_users = {}
 	@mokmoks.each{|mokmok|
-			@creators[mokmok.id] = exportMemberInfo(WORKSPACE_TOKEN, mokmok.creator_id)["profile"]
+			@creators[mokmok.id] = exportMemberInfo(BOT_TOKEN, mokmok.creator_id)["profile"]
 			mokmok.participate_users.each {|participate_user|
 				@participate_users[mokmok.id] = {}
-				@participate_users [mokmok.id][participate_user.user_id] =  exportMemberInfo(WORKSPACE_TOKEN, participate_user.user_id)["profile"]
+				@participate_users [mokmok.id][participate_user.user_id] =  exportMemberInfo(BOT_TOKEN, participate_user.user_id)["profile"]
 			}
 	}
 	@channels = exportAllChannelNames(BOT_TOKEN)

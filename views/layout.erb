@@ -21,11 +21,11 @@
     </div>
     <div class="collapse navbar-collapse" id="navigation">
       <% if @current_user %>
-        <p class="navbar-text navbar-right"><a href="https://slack.com/oauth/authorize?scope=identity.basic identity.team identity.avatar&client_id=448569467826.450449244064&redirect_uri=https://mokmok-aldytsukasa.c9users.io/signin_with_slack" style="color: white!important;">違うアカウントでログインする</a></a></p>
+        <p class="navbar-text navbar-right"><a href="https://slack.com/oauth/authorize?scope=identity.basic identity.team identity.avatar&client_id=<%= @client_id %>&redirect_uri=https://mokmok-aldytsukasa.c9users.io/signin_with_slack" style="color: white!important;">違うアカウントでログインする</a></a></p>
         <p class="navbar-text navbar-right" style="color: white"><%= @current_user["name"] %> さんこんにちは</p>
         <a href="/users/mypage" class="navbar-text navbar-right dropdown" style="color: white"><img class="nav_icon" src="<%= @current_user["image_24"] %>"></i></a>
       <% else %>
-        <p class="navbar-text navbar-right"><a href="https://slack.com/oauth/authorize?scope=identity.basic identity.team identity.avatar&client_id=448569467826.450449244064&redirect_uri=https://mokmok-aldytsukasa.c9users.io/signin_with_slack" style="color: white!important;">ログインする</a></p>
+        <p class="navbar-text navbar-right"><a href="https://slack.com/oauth/authorize?scope=identity.basic identity.team identity.avatar&client_id=<%= @client_id %>&redirect_uri=https://mokmok-aldytsukasa.c9users.io/signin_with_slack" style="color: white!important;">ログインする</a></p>
         <a href="/users/mypage" class="navbar-text navbar-right dropdown" style="color: white"> <i class="fas fa-user-alt"></i></a>  
       <% end %>
     </div>
