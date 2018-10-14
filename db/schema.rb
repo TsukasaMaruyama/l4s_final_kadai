@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_07_235542) do
+ActiveRecord::Schema.define(version: 2018_10_14_035243) do
 
   create_table "mokmoks", force: :cascade do |t|
     t.string "creator_id"
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 2018_10_07_235542) do
     t.string "mokmok_id"
     t.string "user_id"
     t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "workspaces", force: :cascade do |t|
+    t.string "access_token"
+    t.string "scope"
+    t.string "team_name"
+    t.string "team_id"
+    t.string "bot_user_id"
+    t.string "bot_access_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

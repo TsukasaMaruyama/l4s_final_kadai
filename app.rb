@@ -14,13 +14,10 @@ SLACK＿API_BASE = "https://slack.com/api/";
 
 # アプリ固有のトークン
 # レガシートークンは使わない
-BOT_TOKEN = "xoxb-448569467826-451902602083-rYXvWShdzqUtLy3EDhBkiKqC"
-OAUTH_TOKEN = "xoxp-448569467826-448569468674-451388395729-7517eadcec39a1cd527b745144f90b7c"
 CLIENT_ID = "448569467826.451820329812"
 CLIENT_SECRET = "94835dfd6993840bfc5b8bb6bcc970aa"
 
 # レガシートークン使いたくない
-WORKSPACE_TOKEN = "xoxp-448569467826-448569468674-453361585046-eae017ad3a2b046854c007d3c5cbf646"
 
 before do
 	@client_id = CLIENT_ID
@@ -29,7 +26,8 @@ before do
 		request.path.include?('/create_mokmok') || 
 		request.path.include?('/event_catch_json') ||
 		request.path.include?('/event_catch_post') ||
-		request.path.include?('/signin_with_slack')
+		request.path.include?('/signin_with_slack') ||
+		request.path.include?('/mokmoks/setup')
 		
 		unless session[:user].nil?
 			@current_user = session[:user]
@@ -44,8 +42,8 @@ def postRequest(url, content)
 	return res
 end
 
-def openDialog(dialog, trigger_id)
-	res = Net::HTTP.post_form(URI.parse("https://slack.com/api/dialog.open?token=#{OAUTH_TOKEN}&dialog=#{dialog.to_json}&trigger_id=#{trigger_id}&pretty=1"),{trigger_id: trigger_id, dialog: dialog.to_json, token: OAUTH_TOKEN})
+def openDialog(dialog, trigger_id, bot_token)
+	res = Net::HTTP.post_form(URI.parse("https://slack.com/api/dialog.open?token=#{bot_token}&dialog=#{dialog.to_json}&trigger_id=#{trigger_id}&pretty=1"),{trigger_id: trigger_id, dialog: dialog.to_json, token: bot_token})
 	return res
 end
 
@@ -83,7 +81,7 @@ def exportChannelList(oauth_token)
 	return res["channels"]
 end
 
-post '/create_mokmok' do
+post '/create_mokmok' do 
 	trigger_id = params[:trigger_id]
 	dates = []
 	today = Date.today
@@ -143,12 +141,9 @@ post '/create_mokmok' do
 			},
 		]
 	}
-	res = openDialog(dialog,trigger_id)
+	bot_token = exportBotAccessToken(params[:team_id])
+	res = openDialog(dialog,trigger_id, bot_token)
 	return
-end
-
-def talk(content)
-	talkWithWebhook(content,"https://hooks.slack.com/services/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")
 end
 
 # イベントサブスクリプションのイベント
@@ -165,6 +160,7 @@ post '/event_catch_json' do
 	end
 
 	if event_type == "app_mention"
+		exportCode()
 	end
 	json res
 end
@@ -219,10 +215,11 @@ def createNewMokmok(payload)
 	
 	# channelにもくもく会できました&参加ボタン付きメッセを送る
 	
+	bot_token = exportBotAccessToken(team_id)
 	participate_btn =
 	{
 		channel: channel_id,
-		token: BOT_TOKEN,
+		token: bot_token,
 		text: "もくもく会が作成されました",
 		attachments: 
 		[
@@ -249,11 +246,10 @@ def createNewMokmok(payload)
 		].to_json
 	}
 	
-	talkWithChannelId(participate_btn, channel_id)
+	talkWithChannelId(participate_btn, channel_id, team_id)
 end
 
 def participateMokmok(payload)
-	# mokmok_id user_id comment
 	mokmok_id = payload["actions"][0]["value"]
 	user_id = payload["user"]["id"]
 	if ParticipateUser.find_by(user_id: user_id, mokmok_id: mokmok_id).nil?
@@ -261,28 +257,20 @@ def participateMokmok(payload)
 			mokmok_id: mokmok_id,
 			user_id: user_id
 		)
+		team_id = payload["tean"]["id"]
 		mokmok = Mokmok.find(mokmok_id)
-		user_name = exportMemberName(OAUTH_TOKEN, user_id)
-		res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}"}, mokmok.channel_id)
+		bot_token = exportBotAccessToken(team_id)
+		user_name = exportMemberName(bot_token, user_id)
+		res = talkWithChannelId({text: "【#{mokmok.title} @#{mokmok.place}】に#{user_name}さんが参加しました\n詳細:https://mokmok-aldytsukasa.c9users.io/mokmoks/view/#{mokmok.id}"}, mokmok.channel_id, team_id)
 	end
 end
 
-def talkWithWebhook(content, webhook)
-	uri = URI.parse(webhook)
-	https = Net::HTTP.new(uri.host, uri.port)
-	https.use_ssl = true # HTTPSでよろしく
-	req = Net::HTTP::Post.new(uri.request_uri)
-	req["Content-Type"] = "application/json" # httpリクエストヘッダの追加
-	payload = content.to_json
-	req.body = payload # リクエストボデーにJSONをセット
-	https.request(req)
-end
-
 # https://api.slack.com/methods/chat.postMessage
-def talkWithChannelId(content, channel_id)
+def talkWithChannelId(content, channel_id, team_id)
+	bot_token  = exportBotAccessToken(team_id)
 	url = "https://slack.com/api/chat.postMessage"
 	content[:channel] = channel_id
-	content[:token] = BOT_TOKEN
+	content[:token] = bot_token
 	res = postRequest(url, content)
 	return res
 end
@@ -294,10 +282,11 @@ end
 
 get '/mokmoks/view/:id' do
 	@mokmok = Mokmok.find(params[:id])
-	@creator = exportMemberInfo(BOT_TOKEN, @mokmok.creator_id)["profile"]
+	bot_token = exportBotAccessToken(@mokmok.team_id)
+	@creator = exportMemberInfo(bot_token, @mokmok.creator_id)["profile"]
 	@participate_users = []
 	@mokmok.participate_users.each {|participate_user|
-		@participate_users << exportMemberInfo(BOT_TOKEN, participate_user.user_id)["profile"]
+		@participate_users << exportMemberInfo(bot_token, participate_user.user_id)["profile"]
 	}
 	erb :mokmok_ditail
 end
@@ -307,16 +296,17 @@ get '/mokmoks' do
 	@mokmoks_created = Mokmok.where("team_id = ? AND creator_id = ?",team_id, session[:user]["id"])
 	
 	@mokmoks = Mokmok.where("team_id = ? AND channel_id IN (?)", team_id, session[:channels])
+	bot_token = exportBotAccessToken(team_id)
 	@creators = {}
 	@participate_users = {}
 	@mokmoks.each{|mokmok|
-			@creators[mokmok.id] = exportMemberInfo(BOT_TOKEN, mokmok.creator_id)["profile"]
+			@creators[mokmok.id] = exportMemberInfo(bot_token, mokmok.creator_id)["profile"]
 			mokmok.participate_users.each {|participate_user|
 				@participate_users[mokmok.id] = {}
-				@participate_users [mokmok.id][participate_user.user_id] =  exportMemberInfo(BOT_TOKEN, participate_user.user_id)["profile"]
+				@participate_users [mokmok.id][participate_user.user_id] =  exportMemberInfo(bot_token, participate_user.user_id)["profile"]
 			}
 	}
-	@channels = exportAllChannelNames(BOT_TOKEN)
+	@channels = exportAllChannelNames(bot_token)
 	erb :mokmoks
 end
 
@@ -402,3 +392,36 @@ post "/mokmoks/edit/:id" do
 	redirect "/mokmoks/view/#{id}"
 end
 
+get "/mokmoks/setup" do
+	data = fetchWorkspaceData(params[:code])
+	unless Workspace.find_by(team_id: data["team_id"])
+		Workspace.create(
+			access_token: data["access_token"],
+			scope: data["scope"],
+			team_name: data["team_name"],
+			team_id: data["team_id"],
+			bot_user_id: data["bot"]["bot_user_id"],
+			bot_access_token: data["bot"]["bot_access_token"]
+		)
+	end
+	redirect "/signin"
+end
+
+
+def fetchWorkspaceData(code) 
+	url = "https://slack.com/api/oauth.access?client_id=#{CLIENT_ID}&client_secret=#{CLIENT_SECRET}&code=#{code}&redirect_uri=https://mokmok-aldytsukasa.c9users.io/mokmoks/setup"
+	res = JSON.parse(Net::HTTP.get(URI.parse(url)))
+	return res
+end
+
+def exportBotAccessToken(team_id)
+	workspace = Workspace.find_by(team_id: team_id)
+	return workspace.bot_access_token
+end
+
+def exportCode()
+	scope = "chat:write:bot bot commands users:read"
+	redirect_url = "https://mokmok-aldytsukasa.c9users.io/mokmoks/setup"
+	url = "https://slack.com/oauth/authorize?client_id=#{CLIENT_ID}&scope=#{scope}&redirect_uri=#{redirect_url}"
+	res = Net::HTTP.get(URI.parse(url))
+end

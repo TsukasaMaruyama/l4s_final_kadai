@@ -12,3 +12,7 @@ end
 class ParticipateUser < ActiveRecord::Base
      belongs_to :mokmok
 end
+
+class Workspace < ActiveRecord::Base
+     has_many :participate_users
+end
